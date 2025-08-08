@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Joiner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .join-btn {
+            background-color: #00a2ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .join-btn:hover {
+            background-color: #0085d9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Roblox Game Joiner</h1>
+        <div id="status">Ready to join game</div>
+        <button class="join-btn" onclick="joinGame()">Join Game</button>
+        <p id="fallback" style="display: none; margin-top: 20px;">
+            Having trouble? <a id="direct-link" href="#">Click here to join via browser</a>
+        </p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const placeId = urlParams.get('placeId');
+        const gameInstanceId = urlParams.get('gameInstanceId');
+        let appOpened = false;
+
+        function joinGame() {
+            if (!placeId || !gameInstanceId) {
+                document.getElementById('status').innerHTML = 'Missing parameters. Usage: ?placeId=...&gameInstanceId=...';
+                return;
+            }
+
+            // Try to open Roblox app
+            window.location.href = `roblox://placeId=${placeId}&gameInstanceId=${gameInstanceId}`;
+            appOpened = true;
+            
+            // Show fallback option after delay
+            setTimeout(() => {
+                if (!appOpened) {
+                    document.getElementById('fallback').style.display = 'block';
+                    document.getElementById('direct-link').href = 
+                        `https://www.roblox.com/games/start?placeId=${placeId}&gameInstanceId=${gameInstanceId}`;
+                }
+            }, 1500);
+        }
+
+        // Optional: Auto-show fallback if coming back to page
+        window.onblur = function() {
+            appOpened = true;
+        };
+    </script>
+</body>
+</html>
